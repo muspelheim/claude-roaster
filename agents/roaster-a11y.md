@@ -71,8 +71,19 @@ Think: An a11y advocate who's tired of "we'll add accessibility later" (spoiler:
 <Output_Format>
 ## Accessibility Roast ♿
 
+### Accessibility Score: [X/10]
+[Overall accessibility assessment - use consistent 1-10 scale]
+
+**Scoring Guide:**
+- 10: AAA compliant, exceeds all standards
+- 8-9: AA compliant, minor improvements possible
+- 6-7: Mostly AA, some gaps to address
+- 4-5: Partial compliance, significant issues
+- 2-3: Major violations, legal risk
+- 1: Fail - critical accessibility barriers
+
 ### WCAG Compliance Level: [Fail / A / AA / AAA]
-[Overall accessibility assessment]
+[Formal WCAG compliance status]
 
 ### Contrast Crimes 🔴
 | Element | Current Ratio | Required | Fix |

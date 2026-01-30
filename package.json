@@ -42,18 +42,18 @@
     "ux-audit"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "Yauheni",
+    "email": "test@test.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/claude-roaster"
+    "url": "https://github.com/muspelheim/claude-roaster"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/claude-roaster/issues"
+    "url": "https://github.com/muspelheim/claude-roaster/issues"
   },
-  "homepage": "https://github.com/yourusername/claude-roaster#readme",
+  "homepage": "https://github.com/muspelheim/claude-roaster#readme",
   "engines": {
     "node": ">=18.0.0"
   },
