@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-roaster",
+  "description": "Brutal UI/UX roasting agent with multi-perspective analysis",
+  "owner": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "plugins": [
+    {
+      "name": "claude-roaster",
+      "description": "Brutal UI/UX roasting agent - multi-perspective design critique with no mercy. Supports Xcode MCP, Playwright MCP, and manual screenshot upload.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Your Name",
+        "email": "your.email@example.com"
+      },
+      "source": "./",
+      "category": "productivity",
+      "tags": [
+        "ui-ux",
+        "design",
+        "review",
+        "accessibility",
+        "roast",
+        "critique"
+      ]
+    }
+  ]
+}

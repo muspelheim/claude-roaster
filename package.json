@@ -1,0 +1,41 @@
+{
+  "name": "claude-roaster",
+  "version": "1.0.0",
+  "description": "Brutal UI/UX roasting agent for Claude Code - multi-perspective design critique with no mercy",
+  "type": "module",
+  "main": "index.js",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "ui-ux",
+    "design-review",
+    "roast",
+    "critique",
+    "accessibility",
+    "usability",
+    "ux-audit"
+  ],
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/claude-roaster"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/claude-roaster/issues"
+  },
+  "homepage": "https://github.com/yourusername/claude-roaster#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "agents",
+    "commands",
+    "skills",
+    ".claude-plugin",
+    "README.md"
+  ]
+}
