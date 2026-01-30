@@ -3,7 +3,33 @@
   "version": "1.0.0",
   "description": "Brutal UI/UX roasting agent for Claude Code - multi-perspective design critique with no mercy",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "claude-roaster": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "postinstall": "node dist/cli/index.js postinstall || true"
+  },
+  "files": [
+    "dist",
+    "agents",
+    "commands",
+    "skills",
+    "hooks",
+    ".claude-plugin",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "claude-code",
     "claude",
@@ -31,11 +57,8 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "files": [
-    "agents",
-    "commands",
-    "skills",
-    ".claude-plugin",
-    "README.md"
-  ]
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "typescript": "^5.7.2"
+  }
 }
