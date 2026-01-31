@@ -83,9 +83,6 @@ When Claude makes changes, validate them:
 # Build the project
 npm run build
 
-# Check for TypeScript errors
-npm run build
-
 # Test the plugin in Claude Code
 claude plugins install .
 ```
