@@ -33,34 +33,68 @@ Ever wanted Gordon Ramsay to review your UI? This is it. The Roaster agent tears
 
 ## Usage
 
-### Quick Start
+### Command Syntax
 
 ```bash
-# Single screen roast
-/roast login screen
+/roast [mode] [target] [options]
+```
 
-# User flow analysis
+**Modes:**
+- `screen` - Single screen analysis (default)
+- `flow` - Multi-screen user journey
+- `audit` - Full application review
+
+**Options:**
+- `--iterations=<1-10>` - Roast cycles (default: 3)
+- `--focus=<area>` - Priority: a11y, conversion, usability, visual, implementation
+- `--output=<path>` - Output directory (default: reports/roast/)
+- `--fix=<mode>` - Fix handling: auto, report, ask (default: ask)
+
+### Examples
+
+```bash
+# Screen mode - single view analysis
+/roast screen login
+/roast screen settings --focus=a11y
+/roast screen checkout --iterations=5
+
+# Flow mode - user journey analysis
 /roast flow checkout
-/roast user onboarding flow
+/roast flow onboarding --fix=auto
 
-# Multiple iterations
-/roast checkout process - 5 iterations
-
-# Focus on specific area
-/roast screen --focus=accessibility
-
-# Comprehensive audit
-/roast entire app - comprehensive audit
+# Audit mode - full app review
+/roast audit
+/roast audit --output=./audit-results
 ```
 
 ### What Happens
 
-1. **Target Selection** - Specify what to roast (screen, flow, or full audit)
-2. **Screenshot Capture** - Auto-detects platform (Xcode/Playwright) or asks for upload
-3. **Multi-Agent Analysis** - Specialists analyze in parallel
-4. **Brutal Report** - Synthesized roast with prioritized issues
-5. **Fix Decision** - Auto-implement, cherry-pick, or just report
-6. **Iteration** - Repeat for continuous improvement
+```
+🔥 ROAST SESSION STARTED
+├─ Mode: screen
+├─ Target: login
+├─ Iterations: 3
+└─ Focus: balanced
+
+📸 Capturing screenshot...
+└─ Using: Playwright MCP ✓
+
+🔥 Roasting: login (1/3)
+├─ 🎨 Designer: ✓ 3 issues
+├─ 💻 Developer: ✓ 2 issues
+├─ 👤 User: ✓ 4 issues
+├─ ♿ A11y: ✓ 5 issues (2 critical!)
+└─ 📈 Marketing: ✓ 2 issues
+
+Found 16 issues:
+├─ 🔴 Critical: 2
+├─ 🟠 Major: 6
+└─ 🟡 Minor: 8
+
+📄 Report: reports/roast/roast_login_1.md
+```
+
+**Smart defaults:** Starts immediately without asking questions. Fix preferences asked only after showing results.
 
 ## How It Works
 
@@ -68,9 +102,9 @@ Ever wanted Gordon Ramsay to review your UI? This is it. The Roaster agent tears
 
 | Mode | Command | What Gets Analyzed | Screenshots |
 |------|---------|-------------------|-------------|
-| **Screen** | `/roast login screen` | Single screen/view | 1 per iteration |
+| **Screen** | `/roast screen login` | Single screen/view | 1 per iteration |
 | **Flow** | `/roast flow checkout` | Multi-screen journey | 1 per step |
-| **Audit** | `/roast entire app` | Full app review | Multiple key screens |
+| **Audit** | `/roast audit` | Full app review | Multiple key screens |
 
 **Screen Mode:** Analyzes one screen in depth. Best for focused improvements on specific views (login, settings, profile).
 
@@ -246,35 +280,46 @@ Reports include:
 
 ## Configuration
 
-### Iteration Count
+All options use unified `--option=value` syntax:
 
 ```bash
-/roast login screen - 5 iterations   # More cycles (max 10)
-/roast login screen - 1 iteration    # Single roast
+/roast screen login --iterations=5 --focus=a11y --fix=auto --output=./reports
 ```
 
-Default: 3 iterations
+### Options Reference
+
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `--iterations` | 1-10 | 3 | Number of roast cycles |
+| `--focus` | a11y, conversion, usability, visual, implementation | balanced | Prioritize perspective |
+| `--fix` | auto, report, ask | ask | How to handle fixes |
+| `--output` | path | reports/roast/ | Output directory |
 
 ### Focus Areas
 
 ```bash
-/roast screen --focus=accessibility  # Prioritize a11y (1.5x weight)
-/roast screen --focus=conversion     # Prioritize marketing
-/roast screen --focus=usability      # Prioritize UX
-/roast screen --focus=visual         # Prioritize design
-/roast screen --focus=implementation # Prioritize code
-/roast screen --focus=all            # Balanced (default)
+/roast screen login --focus=a11y           # Prioritize accessibility
+/roast screen login --focus=conversion     # Prioritize marketing
+/roast screen login --focus=usability      # Prioritize UX
+/roast screen login --focus=visual         # Prioritize design
+/roast screen login --focus=implementation # Prioritize code
 ```
 
-When focus is specified, matching agents get **1.5x weight** while others provide supporting analysis at **0.5x weight**. All agents still run - focus just emphasizes specific perspectives in the synthesis.
+When focus is specified, matching agents get **1.5x weight** while others provide supporting analysis at **0.5x weight**. All agents still run.
 
 ### Fix Mode
 
-When issues are found, you choose:
-- **Auto-implement** - Agent makes all code changes
-- **Cherry-pick** - You select which fixes to apply
-- **Report only** - Document only, no changes
-- **Skip** - Continue to next iteration
+```bash
+/roast screen login --fix=auto    # Auto-implement critical & major fixes
+/roast screen login --fix=report  # Report only, no code changes
+/roast screen login --fix=ask     # Ask after each iteration (default)
+```
+
+With `--fix=ask` (default), you choose after seeing results:
+- **Auto-fix critical & major** - Implement high-priority fixes
+- **Fix all issues** - Implement everything found
+- **Cherry-pick** - Select specific fixes
+- **Report only** - Continue without changes
 
 ## Hooks System
 
