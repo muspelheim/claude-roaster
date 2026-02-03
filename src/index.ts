@@ -50,6 +50,29 @@ export type {
   RoastCommandArgs,
   PluginConfig,
   PluginMetadata,
+
+  // Flow types
+  AppType,
+  FlowActionType,
+  FlowStep,
+  FlowDefinition,
+  FlowTemplate,
+  TransitionAnalysis,
+  FlowRoastSession,
+  FlowStepResult,
+  FlowReport,
+  NaturalLanguageFlowInput,
+
+  // Graph-based flow types
+  FlowNodeType,
+  FlowEdgeType,
+  FlowCondition,
+  FlowNode,
+  FlowEdge,
+  FlowGraph,
+  FlowPath,
+  FlowGraphAnalysis,
+  FlowGraphTemplate,
 } from './types.js';
 
 // =============================================================================
@@ -235,6 +258,70 @@ export {
 } from './errors.js';
 
 // =============================================================================
+// FLOW EXPORTS
+// =============================================================================
+
+export {
+  // App type detection
+  detectAppType,
+
+  // Flow templates
+  FLOW_TEMPLATES,
+  getSuggestedFlows,
+  getCriticalFlows,
+
+  // Natural language parsing
+  parseNaturalLanguageFlow,
+  createFlowFromNaturalLanguage,
+
+  // Flow step utilities
+  generateStepId,
+  createStepFromTemplate,
+  createFlowFromTemplate,
+  validateFlowDefinition,
+  sortFlowSteps,
+  getStepById,
+  getNextStep,
+  getPreviousStep,
+
+  // Flow formatting
+  formatFlowAsJourneyMap,
+  formatFlowAsStepList,
+} from './flow.js';
+
+// =============================================================================
+// GRAPH-BASED FLOW EXPORTS
+// =============================================================================
+
+export {
+  // Graph creation
+  createNode,
+  createEdge,
+  createEmptyGraph,
+  addNode,
+  addEdge,
+  connectNodes,
+  insertNodeBetween,
+
+  // Graph analysis
+  findAllPaths,
+  findDeadEnds,
+  findOrphanNodes,
+  detectCycles,
+  analyzeFlowGraph,
+
+  // Graph visualization
+  toMermaid,
+  toASCII,
+  toMarkdownSummary,
+
+  // Graph templates
+  GRAPH_TEMPLATES,
+  createGraphFromTemplate,
+  getSuggestedGraphTemplates,
+} from './flow-graph.js';
+
+// =============================================================================
 // CONVENIENCE RE-EXPORTS
 // =============================================================================
 
@@ -248,6 +335,11 @@ export const agents: string[] = [
   'roaster-user',
   'roaster-a11y',
   'roaster-marketing',
+  'roaster-performance',
+  'roaster-copy',
+  'roaster-privacy',
+  'roaster-i18n',
+  'roaster-flow',
 ];
 
 /**

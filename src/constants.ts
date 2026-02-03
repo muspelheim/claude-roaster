@@ -35,6 +35,7 @@ export const PLUGIN_METADATA: PluginMetadata = {
     'roaster-copy',
     'roaster-privacy',
     'roaster-i18n',
+    'roaster-flow',
   ],
   commands: ['roast'],
   skills: ['roast'],
@@ -135,6 +136,15 @@ export const AGENTS: Record<RoasterAgentId, AgentConfig> = {
     focusAreas: ['localization', 'rtl', 'text-expansion', 'cultural', 'formatting'],
     priority: 'medium',
   },
+  'roaster-flow': {
+    id: 'roaster-flow',
+    name: 'Flow Roaster',
+    description: 'User flow expert - transitions, friction, cross-screen consistency, journey analysis',
+    model: 'sonnet',
+    perspective: 'flow',
+    focusAreas: ['transitions', 'friction', 'consistency', 'navigation', 'drop-off-risk'],
+    priority: 'high',
+  },
 };
 
 /**
@@ -150,6 +160,7 @@ export const SPECIALIST_AGENTS: SpecialistAgentId[] = [
   'roaster-copy',
   'roaster-privacy',
   'roaster-i18n',
+  'roaster-flow',
 ];
 
 // =============================================================================
@@ -277,6 +288,7 @@ export const PERSPECTIVE_DISPLAY = {
   'roaster-copy': { emoji: '✍️', label: 'Copy Expert Says' },
   'roaster-privacy': { emoji: '🔒', label: 'Privacy Expert Says' },
   'roaster-i18n': { emoji: '🌍', label: 'i18n Expert Says' },
+  'roaster-flow': { emoji: '🔄', label: 'Flow Expert Says' },
 } as const;
 
 // =============================================================================

@@ -305,3 +305,217 @@ Focus weighting is applied during issue synthesis, not agent execution. This ens
 - The orchestrator has full context for decision-making
 - Reports remain comprehensive even with narrow focus
 </Focus_Mode>
+
+<Flow_Mode>
+
+## User Flow Roasting - Multi-Screen Analysis
+
+When users select flow mode, the roaster enters a specialized multi-screen analysis mode that:
+
+1. Captures screenshots for each step in the flow
+2. Analyzes each screen individually
+3. Analyzes transitions between screens
+4. Identifies cross-screen consistency issues
+5. Maps the user journey with friction points
+
+### Flow Initialization
+
+**Option A: User describes flow in natural language**
+```
+User: "roast the checkout flow - user adds item, goes to cart, enters shipping, pays, sees confirmation"
+
+Roaster parses this into:
+1. Add to Cart
+2. Shopping Cart
+3. Shipping Form
+4. Payment
+5. Confirmation
+```
+
+**Option B: Roaster suggests flows based on app type**
+```
+Roaster: "I detected this is an e-commerce app. Here are recommended flows to roast:"
+
+🔴 Critical Flows:
+1. Checkout Flow (Cart → Confirmation)
+2. Search to Purchase
+3. Account Creation
+
+🟠 Important Flows:
+4. Login/Authentication
+5. Password Reset
+6. Profile Update
+
+Which flow would you like to roast? Or describe your own.
+```
+
+**Option C: User selects from template**
+```
+User: "/roast flow checkout"
+Roaster uses the checkout template with standard steps
+```
+
+### Flow Execution
+
+For each step in the flow:
+
+```
+STEP [N] of [TOTAL]: [Screen Name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CAPTURE
+   - Take screenshot of current screen
+   - Save to: reports/roast/screenshots/[flow]_step[N].png
+
+2. ANALYZE (parallel agents)
+   - Launch standard perspective agents (designer, developer, user, a11y, marketing)
+   - PLUS: roaster-flow for transition analysis
+
+3. TRANSITION CHECK (if not first step)
+   - Compare with previous screenshot
+   - Check: navigation consistency, visual continuity, state preservation
+   - Identify: orientation cues, progress indicators
+
+4. RECORD
+   - Store issues for this step
+   - Store transition issues
+   - Calculate step score
+
+5. PROMPT USER
+   "Ready for next step. Please navigate to [Next Screen Name]"
+   [Continue] [Re-capture] [Skip Step] [End Flow]
+```
+
+### Flow-Specific Agents
+
+In addition to standard perspective agents, flow mode includes:
+
+| Agent | Focus |
+|-------|-------|
+| `roaster-flow` | Transitions, journey friction, cross-screen consistency |
+
+The flow agent runs on:
+- Each individual screen (context-aware)
+- Each transition pair
+- The complete flow (summary analysis)
+
+### Flow Report Structure
+
+```markdown
+# 🔄 Flow Roast Report: [Flow Name]
+
+## Flow Overview
+- **Steps Analyzed:** [X]
+- **Total Issues:** [X] (🔴 [X] | 🟠 [X] | 🟡 [X])
+- **Journey Score:** [X/10]
+- **Estimated Drop-off Risk:** [X%]
+
+## Journey Map
+[Visual representation of the flow with friction indicators]
+
+## Step-by-Step Analysis
+
+### Step 1: [Screen Name]
+![Screenshot](screenshots/[flow]_step1.png)
+
+**Screen Issues:**
+[Table of issues from all perspectives]
+
+---
+**↓ Transition to Step 2 ↓**
+
+**Transition Issues:**
+- [Consistency/Navigation/State issues]
+
+---
+
+### Step 2: [Screen Name]
+[Continue for all steps...]
+
+## Cross-Screen Consistency Report
+
+| Element | Step 1 | Step 2 | Step 3 | Consistent? |
+|---------|--------|--------|--------|-------------|
+| Header | ✓ | ✓ | ✗ | 🟠 No |
+| Navigation | ✓ | ✓ | ✓ | ✅ Yes |
+| Typography | ✓ | ✗ | ✗ | 🔴 No |
+
+## Critical Friction Points
+
+1. 🔴 **[Step X → Step Y]**: [Description]
+   - Impact: [User impact]
+   - Fix: [Specific solution]
+
+2. 🟠 **[Step Z]**: [Description]
+   - Impact: [User impact]
+   - Fix: [Specific solution]
+
+## Flow Optimization Recommendations
+
+### Remove These Steps
+- [Step that can be eliminated]
+
+### Combine These Steps
+- [Step A] + [Step B] → [Combined Step]
+
+### Reorder These Steps
+- Move [Step X] before [Step Y] because [reason]
+
+## Before/After Journey
+
+**Current Flow (X steps, ~Y minutes):**
+[A] → [B] → [C] → [D] → [E]
+        ↑ HIGH FRICTION
+
+**Recommended Flow (X-N steps, ~Y-M minutes):**
+[A] → [B+C] → [D] → [E]
+     STREAMLINED
+```
+
+### Supported Flow Patterns
+
+The roaster recognizes and can suggest these common flows:
+
+**E-commerce:**
+- Checkout Flow
+- Search to Purchase
+- Return/Refund Process
+- Account Creation
+
+**SaaS:**
+- User Onboarding
+- Feature Discovery
+- Upgrade/Billing
+- Team Invitation
+
+**Social:**
+- Sign Up to First Post
+- Content Discovery
+- Messaging Flow
+- Profile Setup
+
+**Universal:**
+- Authentication (Login/Signup)
+- Password Reset
+- Settings/Preferences
+- Help/Support
+
+### Flow Mode Commands
+
+```bash
+# Describe flow naturally
+/roast user logs in, views dashboard, updates profile settings
+
+# Use template
+/roast flow checkout
+/roast flow onboarding
+/roast flow authentication
+
+# Specify app type for suggestions
+/roast flow --app-type=ecommerce
+/roast flow --app-type=saas
+
+# Custom iterations per step
+/roast flow checkout --iterations=2
+```
+</Flow_Mode>
