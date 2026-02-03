@@ -79,6 +79,28 @@ Detect and use screenshot method automatically:
 2. `mcp__playwright__browser_take_screenshot` → Web browser
 3. Manual upload request → Fallback
 
+**IMPORTANT: Always specify screenshot path explicitly:**
+
+```typescript
+// For Playwright MCP - MUST specify filename with correct path
+mcp__playwright__browser_take_screenshot({
+  type: "png",
+  filename: "reports/roast/screenshots/[target]_[iteration].png"
+})
+
+// For Xcode MCP
+mcp__xcodebuildmcp__screenshot({
+  path: "reports/roast/screenshots/[target]_[iteration].png"
+})
+```
+
+**Create directory first:**
+```bash
+mkdir -p reports/roast/screenshots
+```
+
+Without explicit path, Playwright saves to `.playwright-mcp/` which is incorrect.
+
 ### Phase 3: Parallel Analysis
 
 **Agent Presets:**
