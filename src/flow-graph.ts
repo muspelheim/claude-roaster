@@ -194,16 +194,22 @@ function calculateEstimatedPaths(nodes: FlowNode[], edges: FlowEdge[]): number {
  */
 export function findAllPaths(graph: FlowGraph, maxPaths = 100): FlowPath[] {
   const paths: FlowPath[] = [];
-  const visited = new Set<string>();
 
   function dfs(
     currentId: string,
     currentPath: string[],
-    currentEdges: string[]
+    currentEdges: string[],
+    inStack: Set<string>
   ): void {
     if (paths.length >= maxPaths) return;
 
+    // Prevent cycles - don't revisit nodes already in current path
+    if (inStack.has(currentId)) {
+      return;
+    }
+
     currentPath.push(currentId);
+    inStack.add(currentId);
 
     if (graph.endNodeIds.includes(currentId)) {
       paths.push({
@@ -217,27 +223,20 @@ export function findAllPaths(graph: FlowGraph, maxPaths = 100): FlowPath[] {
         issues: [],
       });
       currentPath.pop();
+      inStack.delete(currentId);
       return;
     }
-
-    // Prevent infinite loops
-    const pathKey = currentPath.join(',');
-    if (visited.has(pathKey)) {
-      currentPath.pop();
-      return;
-    }
-    visited.add(pathKey);
 
     const outgoingEdges = graph.edges.filter(e => e.source === currentId);
     for (const edge of outgoingEdges) {
-      dfs(edge.target, currentPath, [...currentEdges, edge.id]);
+      dfs(edge.target, currentPath, [...currentEdges, edge.id], inStack);
     }
 
-    visited.delete(pathKey);
     currentPath.pop();
+    inStack.delete(currentId);
   }
 
-  dfs(graph.startNodeId, [], []);
+  dfs(graph.startNodeId, [], [], new Set());
 
   // Mark happy path (shortest successful path)
   if (paths.length > 0) {
