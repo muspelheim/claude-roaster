@@ -20,6 +20,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "version:patch": "node scripts/version-sync.js patch",
+    "version:minor": "node scripts/version-sync.js minor",
+    "version:major": "node scripts/version-sync.js major",
+    "version:sync": "node scripts/version-sync.js",
     "prepublishOnly": "npm run build",
     "postinstall": "node dist/cli/index.js postinstall || true"
   },

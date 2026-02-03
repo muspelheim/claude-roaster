@@ -1,0 +1,85 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - '.github/workflows/release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    # Skip if commit message contains [skip ci] or [no version]
+    if: |
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      !contains(github.event.head_commit.message, '[no version]') &&
+      !contains(github.event.head_commit.message, 'chore(release)')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine Version Bump Type
+        id: bump-type
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+
+          # Check commit message for conventional commits
+          if echo "$COMMIT_MSG" | grep -qiE "^(breaking|major)(\(.+\))?:"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMIT_MSG" | grep -qiE "^feat(\(.+\))?:"; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump Version
+        id: version
+        run: |
+          node scripts/version-sync.js ${{ steps.bump-type.outputs.type }}
+
+      - name: Commit Version Bump
+        run: |
+          git add package.json .claude-plugin/plugin.json src/constants.ts
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No version changes to commit"
+            exit 0
+          fi
+
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          git commit -m "chore(release): bump version to ${NEW_VERSION} [skip ci]"
+          git tag "v${NEW_VERSION}"
+          git push origin main --tags
+
+      - name: Create Release Summary
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "## Version Bump Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**New Version:** \`${NEW_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Bump Type:** \`${{ steps.bump-type.outputs.type }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Files updated:" >> $GITHUB_STEP_SUMMARY
+          echo "- \`package.json\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`.claude-plugin/plugin.json\`" >> $GITHUB_STEP_SUMMARY
+          echo "- \`src/constants.ts\`" >> $GITHUB_STEP_SUMMARY
