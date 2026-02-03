@@ -1,45 +1,4 @@
 {
-  "description": "Claude Roaster hooks for UI/UX analysis sessions",
-  "hooks": {
-    "onSessionStart": [
-      {
-        "event": "onSessionStart",
-        "handler": "default",
-        "enabled": true,
-        "description": "Log session initialization with target and configuration details"
-      }
-    ],
-    "onIterationStart": [
-      {
-        "event": "onIterationStart",
-        "handler": "default",
-        "enabled": true,
-        "description": "Log the start of each roast iteration"
-      }
-    ],
-    "onIterationComplete": [
-      {
-        "event": "onIterationComplete",
-        "handler": "default",
-        "enabled": true,
-        "description": "Log iteration summary with issues found and fixes applied"
-      }
-    ],
-    "onReportGenerated": [
-      {
-        "event": "onReportGenerated",
-        "handler": "default",
-        "enabled": true,
-        "description": "Log the path where the roast report was written"
-      }
-    ],
-    "onSessionComplete": [
-      {
-        "event": "onSessionComplete",
-        "handler": "default",
-        "enabled": true,
-        "description": "Log final session summary with duration and completion status"
-      }
-    ]
-  }
+  "description": "Claude Roaster hooks for Claude Code integration",
+  "hooks": {}
 }
