@@ -240,3 +240,68 @@ Where `[topic]` is sanitized (lowercase, hyphens):
 3. Why it matters (user impact)
 4. Exact fix with values
 </Roast_Calibration>
+
+<Focus_Mode>
+## Focus Areas - Targeted Analysis
+
+Users can specify focus areas to emphasize specific perspectives during the roast. When focus is enabled, matching agents get higher priority (1.5x weight) while others provide supporting analysis (0.5x weight).
+
+### Available Focus Areas
+
+| Focus | Primary Agent | What It Emphasizes |
+|-------|--------------|-------------------|
+| `accessibility` | roaster-a11y | WCAG compliance, screen readers, keyboard nav, contrast, touch targets |
+| `conversion` | roaster-marketing | CTAs, trust signals, branding, persuasive copy, conversion optimization |
+| `usability` | roaster-user | Task completion, friction points, cognitive load, user expectations |
+| `visual` | roaster-designer | Visual hierarchy, color theory, typography, spacing, layout |
+| `implementation` | roaster-developer | Component structure, state management, performance, code quality |
+| `all` | All agents | Balanced analysis (default) - all perspectives weighted equally |
+
+### How Focus Affects Roasting
+
+**When focus is specified:**
+1. **All agents still run** - you get comprehensive coverage from every perspective
+2. **Focused agents get 1.5x weight** - their issues are prioritized in the synthesis
+3. **Supporting agents get 0.5x weight** - their input is considered but not emphasized
+4. **Final report highlights focused areas** - the synthesis emphasizes focused perspectives
+
+**Example:**
+```bash
+# Focus on accessibility and usability
+roast login-screen --focus=accessibility,usability
+```
+
+In this mode:
+- roaster-a11y and roaster-user findings dominate the report
+- Designer, developer, and marketing insights are still captured but de-emphasized
+- Issue prioritization favors accessibility and usability concerns
+
+**When to use focus mode:**
+- **Pre-launch accessibility audit** → `--focus=accessibility`
+- **Conversion rate optimization** → `--focus=conversion`
+- **User testing prep** → `--focus=usability`
+- **Design system review** → `--focus=visual`
+- **Code review with UX lens** → `--focus=implementation`
+- **Comprehensive audit** → `--focus=all` (or omit flag)
+
+### Focus in Reports
+
+When focus mode is active, reports include a focus summary:
+
+```markdown
+**Focus Mode:** Accessibility & Usability
+
+**Primary Focus (1.5x weight):** Accessibility Roaster, User Roaster
+**Supporting Perspectives (0.5x weight):** Designer Roaster, Developer Roaster, Marketing Roaster
+
+This roast emphasizes accessibility & usability while still considering all perspectives.
+```
+
+### Implementation Note
+
+Focus weighting is applied during issue synthesis, not agent execution. This ensures:
+- No perspective is completely silenced
+- Supporting agents can still catch critical issues
+- The orchestrator has full context for decision-making
+- Reports remain comprehensive even with narrow focus
+</Focus_Mode>

@@ -134,6 +134,7 @@ export {
 
   // Validation utilities
   validateSessionConfig,
+  validateSessionConfigStrict,
   isPassingScore,
   passesA11yMinimum,
 
@@ -142,6 +143,16 @@ export {
   scoreToWcagLevel,
   normalizeScore,
   createUnifiedScores,
+
+  // Error handling wrappers
+  sanitizeTopicSafe,
+  parseIterationCountSafe,
+  validateScore,
+  validateSeverity,
+  validateTargetType,
+  validateFilePath,
+  tryExecute,
+  tryExecuteAsync,
 } from './utils.js';
 
 // =============================================================================
@@ -174,6 +185,54 @@ export {
   formatConfigDisplay,
   generateConfigTemplate,
 } from './config.js';
+
+// =============================================================================
+// LOGGER EXPORTS
+// =============================================================================
+
+export {
+  // Logger class and instance
+  Logger,
+  logger,
+
+  // Logger types
+  LogLevel,
+  type LogCategory,
+  type LogEntry,
+  type LoggerConfig,
+
+  // Logger configuration
+  DEFAULT_LOGGER_CONFIG,
+
+  // Logger utilities
+  createCategoryLogger,
+  parseLogLevel,
+} from './logger.js';
+
+// =============================================================================
+// ERROR EXPORTS
+// =============================================================================
+
+export {
+  // Base error class
+  RoasterError,
+
+  // Specific error classes
+  ConfigurationError,
+  SessionError,
+  ScreenshotError,
+  AnalysisError,
+  ReportError,
+  ValidationError,
+
+  // Error utilities
+  isRoasterError,
+  isRecoverableError,
+  getErrorMessage,
+  getErrorStack,
+  formatErrorForUser,
+  wrapError,
+} from './errors.js';
 
 // =============================================================================
 // CONVENIENCE RE-EXPORTS

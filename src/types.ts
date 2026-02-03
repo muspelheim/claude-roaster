@@ -16,7 +16,11 @@ export type RoasterAgentId =
   | 'roaster-developer'
   | 'roaster-user'
   | 'roaster-a11y'
-  | 'roaster-marketing';
+  | 'roaster-marketing'
+  | 'roaster-performance'
+  | 'roaster-copy'
+  | 'roaster-privacy'
+  | 'roaster-i18n';
 
 /**
  * Specialist agent identifiers (excludes main orchestrator)

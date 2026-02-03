@@ -13,6 +13,7 @@ import type {
   RoastTargetType,
 } from './types.js';
 import { SEVERITIES, PERSPECTIVE_DISPLAY, FILE_PATTERNS, SCORE_THRESHOLDS } from './constants.js';
+import { ConfigurationError, ValidationError } from './errors.js';
 
 // =============================================================================
 // STRING UTILITIES
@@ -317,6 +318,7 @@ export function calculateDuration(startedAt: Date, endedAt: Date = new Date()): 
 
 /**
  * Validate roast session configuration
+ * @throws {ValidationError} if validation fails
  */
 export function validateSessionConfig(config: Partial<RoastSession['config']>): string[] {
   const errors: string[] = [];
@@ -330,6 +332,17 @@ export function validateSessionConfig(config: Partial<RoastSession['config']>): 
   }
 
   return errors;
+}
+
+/**
+ * Validate roast session configuration and throw on error
+ * @throws {ValidationError} if validation fails
+ */
+export function validateSessionConfigStrict(config: Partial<RoastSession['config']>): void {
+  const errors = validateSessionConfig(config);
+  if (errors.length > 0) {
+    throw ValidationError.fromErrors(errors);
+  }
 }
 
 /**
@@ -428,4 +441,176 @@ export function createUnifiedScores(scores: {
     implementation: normalizeScore(scores.implementation ?? 5),
     conversion: normalizeScore(scores.conversion ?? 5),
   };
+}
+
+// =============================================================================
+// ERROR HANDLING WRAPPERS
+// =============================================================================
+
+/**
+ * Safe wrapper for sanitizeTopic that handles invalid input
+ * @throws {ConfigurationError} if topic is invalid
+ */
+export function sanitizeTopicSafe(topic: string): string {
+  if (!topic || typeof topic !== 'string') {
+    throw ConfigurationError.invalidValue('topic', topic, 'non-empty string');
+  }
+
+  const sanitized = sanitizeTopic(topic);
+
+  if (sanitized.length === 0) {
+    throw ConfigurationError.invalidValue('topic', topic, 'string with valid characters');
+  }
+
+  return sanitized;
+}
+
+/**
+ * Safe wrapper for parseIterationCount with validation
+ * @throws {ConfigurationError} if iteration count is invalid
+ */
+export function parseIterationCountSafe(input: string | number | undefined, defaultValue = 3): number {
+  const parsed = parseIterationCount(input, defaultValue);
+
+  if (parsed < 1 || parsed > 10) {
+    throw ConfigurationError.invalidValue('iterations', input, 'number between 1 and 10');
+  }
+
+  return parsed;
+}
+
+/**
+ * Validate and format a score value
+ * @throws {ConfigurationError} if score is invalid
+ */
+export function validateScore(score: number, context: string): number {
+  if (typeof score !== 'number' || isNaN(score)) {
+    throw ConfigurationError.invalidValue(context, score, 'valid number');
+  }
+
+  if (score < 1 || score > 10) {
+    throw ConfigurationError.invalidValue(context, score, 'number between 1 and 10');
+  }
+
+  return Math.round(score * 10) / 10;
+}
+
+/**
+ * Validate severity level
+ * @throws {ConfigurationError} if severity is invalid
+ */
+export function validateSeverity(severity: string): Severity {
+  const validSeverities: Severity[] = ['critical', 'major', 'minor'];
+
+  if (!validSeverities.includes(severity as Severity)) {
+    throw ConfigurationError.invalidValue(
+      'severity',
+      severity,
+      `one of: ${validSeverities.join(', ')}`
+    );
+  }
+
+  return severity as Severity;
+}
+
+/**
+ * Validate target type
+ * @throws {ConfigurationError} if target type is invalid
+ */
+export function validateTargetType(type: string): RoastTargetType {
+  const validTypes: RoastTargetType[] = ['screen', 'component', 'flow', 'audit'];
+
+  if (!validTypes.includes(type as RoastTargetType)) {
+    throw ConfigurationError.invalidValue(
+      'targetType',
+      type,
+      `one of: ${validTypes.join(', ')}`
+    );
+  }
+
+  return type as RoastTargetType;
+}
+
+/**
+ * Validate file path format
+ * @throws {ConfigurationError} if path is invalid
+ */
+export function validateFilePath(path: string, context: string): string {
+  if (!path || typeof path !== 'string') {
+    throw ConfigurationError.invalidValue(context, path, 'non-empty string');
+  }
+
+  if (path.trim().length === 0) {
+    throw ConfigurationError.invalidValue(context, path, 'non-empty path');
+  }
+
+  // Check for invalid characters
+  const invalidChars = /[<>"|?*\x00-\x1F]/;
+  if (invalidChars.test(path)) {
+    throw ConfigurationError.invalidValue(
+      context,
+      path,
+      'path without invalid characters (<>"|?*)'
+    );
+  }
+
+  return path;
+}
+
+/**
+ * Try to execute a function and wrap any errors
+ */
+export function tryExecute<T>(
+  fn: () => T,
+  context: string,
+  recoverable = false
+): T {
+  try {
+    return fn();
+  } catch (error) {
+    if (error instanceof ConfigurationError || error instanceof ValidationError) {
+      throw error;
+    }
+
+    const cause = error instanceof Error ? error : undefined;
+    const message = error instanceof Error ? error.message : String(error);
+
+    throw new ConfigurationError(
+      `${context}: ${message}`,
+      {
+        details: { context },
+        recoverable,
+        cause,
+      }
+    );
+  }
+}
+
+/**
+ * Try to execute an async function and wrap any errors
+ */
+export async function tryExecuteAsync<T>(
+  fn: () => Promise<T>,
+  context: string,
+  recoverable = false
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (error instanceof ConfigurationError || error instanceof ValidationError) {
+      throw error;
+    }
+
+    const cause = error instanceof Error ? error : undefined;
+    const message = error instanceof Error ? error.message : String(error);
+
+    throw new ConfigurationError(
+      `${context}: ${message}`,
+      {
+        details: { context },
+        recoverable,
+        cause,
+      }
+    );
+  }
 }

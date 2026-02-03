@@ -31,6 +31,10 @@ export const PLUGIN_METADATA: PluginMetadata = {
     'roaster-user',
     'roaster-a11y',
     'roaster-marketing',
+    'roaster-performance',
+    'roaster-copy',
+    'roaster-privacy',
+    'roaster-i18n',
   ],
   commands: ['roast'],
   skills: ['roast'],
@@ -95,6 +99,42 @@ export const AGENTS: Record<RoasterAgentId, AgentConfig> = {
     focusAreas: ['ctas', 'trust-signals', 'brand', 'persuasion', 'copy'],
     priority: 'medium',
   },
+  'roaster-performance': {
+    id: 'roaster-performance',
+    name: 'Performance Roaster',
+    description: 'Performance expert - load times, bundle size, render performance, memory usage',
+    model: 'sonnet',
+    perspective: 'performance',
+    focusAreas: ['load-time', 'bundle-size', 'render-performance', 'memory', 'core-web-vitals'],
+    priority: 'high',
+  },
+  'roaster-copy': {
+    id: 'roaster-copy',
+    name: 'Copy Roaster',
+    description: 'Copy/Content expert - microcopy, UX writing, tone consistency, clarity',
+    model: 'sonnet',
+    perspective: 'content',
+    focusAreas: ['microcopy', 'clarity', 'tone', 'readability', 'error-messages'],
+    priority: 'medium',
+  },
+  'roaster-privacy': {
+    id: 'roaster-privacy',
+    name: 'Privacy Roaster',
+    description: 'Privacy expert - data collection, consent patterns, GDPR/CCPA compliance',
+    model: 'sonnet',
+    perspective: 'privacy',
+    focusAreas: ['consent', 'data-collection', 'gdpr', 'ccpa', 'dark-patterns'],
+    priority: 'high',
+  },
+  'roaster-i18n': {
+    id: 'roaster-i18n',
+    name: 'i18n Roaster',
+    description: 'Internationalization expert - localization readiness, RTL support, cultural considerations',
+    model: 'sonnet',
+    perspective: 'internationalization',
+    focusAreas: ['localization', 'rtl', 'text-expansion', 'cultural', 'formatting'],
+    priority: 'medium',
+  },
 };
 
 /**
@@ -106,6 +146,10 @@ export const SPECIALIST_AGENTS: SpecialistAgentId[] = [
   'roaster-user',
   'roaster-a11y',
   'roaster-marketing',
+  'roaster-performance',
+  'roaster-copy',
+  'roaster-privacy',
+  'roaster-i18n',
 ];
 
 // =============================================================================
@@ -229,6 +273,10 @@ export const PERSPECTIVE_DISPLAY = {
   'roaster-user': { emoji: '👤', label: 'User Says' },
   'roaster-a11y': { emoji: '♿', label: 'Accessibility Expert Says' },
   'roaster-marketing': { emoji: '📈', label: 'Marketing Says' },
+  'roaster-performance': { emoji: '⚡', label: 'Performance Expert Says' },
+  'roaster-copy': { emoji: '✍️', label: 'Copy Expert Says' },
+  'roaster-privacy': { emoji: '🔒', label: 'Privacy Expert Says' },
+  'roaster-i18n': { emoji: '🌍', label: 'i18n Expert Says' },
 } as const;
 
 // =============================================================================

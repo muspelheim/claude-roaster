@@ -1,5 +1,10 @@
 # 🔥 Claude Roaster
 
+[![CI](https://github.com/muspelheim/claude-roaster/actions/workflows/ci.yml/badge.svg)](https://github.com/muspelheim/claude-roaster/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/muspelheim/claude-roaster/branch/main/graph/badge.svg)](https://codecov.io/gh/muspelheim/claude-roaster)
+[![npm version](https://badge.fury.io/js/claude-roaster.svg)](https://badge.fury.io/js/claude-roaster)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > **Brutal UI/UX critique with multi-perspective analysis** - No mercy, maximum improvement.
 
 A Claude Code plugin that roasts your UI/UX from 5 professional perspectives, with iterative improvement cycles.
@@ -92,7 +97,11 @@ Reports include:
 /roast screen --focus=accessibility  # Prioritize a11y
 /roast screen --focus=conversion     # Prioritize marketing
 /roast screen --focus=usability      # Prioritize UX
+/roast screen --focus=visual         # Prioritize design
+/roast screen --focus=implementation # Prioritize code
 ```
+
+When focus is specified, matching agents get **1.5x weight** while others provide supporting analysis at **0.5x weight**. All agents still run - focus just emphasizes specific perspectives in the synthesis.
 
 ### Fix Mode
 
@@ -101,6 +110,132 @@ When issues are found, you choose:
 - **Cherry-pick** - You select which fixes to apply
 - **Report only** - Document only, no changes
 - **Skip** - Continue to next iteration
+
+### Hooks System
+
+Claude Roaster supports lifecycle hooks to customize behavior at key points in the roast session. Hooks are configured in `hooks/hooks.json`.
+
+#### Available Hook Events
+
+| Event | Trigger Point | Use Cases |
+|-------|--------------|-----------|
+| `onSessionStart` | Before roast begins | Initialize tracking, send notifications, validate setup |
+| `onIterationStart` | Before each iteration | Prepare tools, log progress, reset state |
+| `onIterationComplete` | After each iteration | Analyze results, update dashboards, notify team |
+| `onReportGenerated` | After report is written | Post-process reports, upload to cloud, send alerts |
+| `onSessionComplete` | After all iterations done | Generate summaries, cleanup resources, archive results |
+
+#### Hook Configuration
+
+Create or modify `hooks/hooks.json`:
+
+```json
+{
+  "description": "Claude Roaster hooks for UI/UX analysis sessions",
+  "hooks": {
+    "onSessionStart": [
+      {
+        "event": "onSessionStart",
+        "handler": "default",
+        "enabled": true,
+        "description": "Log session initialization"
+      }
+    ],
+    "onIterationComplete": [
+      {
+        "event": "onIterationComplete",
+        "handler": "default",
+        "enabled": true,
+        "description": "Log iteration summary"
+      }
+    ]
+  }
+}
+```
+
+#### Default Hooks
+
+By default, Claude Roaster includes logging hooks for all events:
+
+- **onSessionStart** - Logs session ID, target, iterations, fix mode, and focus areas
+- **onIterationStart** - Logs iteration number and progress
+- **onIterationComplete** - Logs issues found, fixes applied, and scores
+- **onReportGenerated** - Logs report file path
+- **onSessionComplete** - Logs final session summary with duration
+
+#### Programmatic Hook Usage
+
+You can also register hooks programmatically:
+
+```typescript
+import { createHookManager } from 'claude-roaster';
+
+const hooks = createHookManager(process.cwd());
+
+// Register custom handler
+hooks.register('onIterationComplete', async (data) => {
+  console.log(`Iteration ${data.iteration.number} found ${data.iteration.issues.length} issues`);
+
+  // Send to external service
+  await fetch('https://analytics.example.com/roast', {
+    method: 'POST',
+    body: JSON.stringify({
+      sessionId: data.session.id,
+      iteration: data.iteration.number,
+      issueCount: data.iteration.issues.length,
+      score: data.iteration.scores.overall
+    })
+  });
+});
+
+// Execute hook
+await hooks.execute('onIterationComplete', {
+  session: mySession,
+  iteration: myIteration,
+  timestamp: new Date()
+});
+```
+
+#### Hook Event Data
+
+Each hook receives specific data:
+
+```typescript
+// onSessionStart
+{
+  session: RoastSession,
+  timestamp: Date
+}
+
+// onIterationStart
+{
+  session: RoastSession,
+  iterationNumber: number,
+  timestamp: Date
+}
+
+// onIterationComplete
+{
+  session: RoastSession,
+  iteration: RoastIteration,
+  timestamp: Date
+}
+
+// onReportGenerated
+{
+  session: RoastSession,
+  reportPath: string,
+  iterationNumber: number,
+  timestamp: Date
+}
+
+// onSessionComplete
+{
+  session: RoastSession,
+  duration: number,  // milliseconds
+  timestamp: Date
+}
+```
 
 ## Platform Support
 
