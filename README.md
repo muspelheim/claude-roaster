@@ -18,16 +18,8 @@ Ever wanted Gordon Ramsay to review your UI? This is it. The Roaster agent tears
 ## Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/yourusername/claude-roaster.git
-
-# Install as Claude Code plugin
-claude plugins install ./claude-roaster
-```
-
-Or via npm (when published):
-```bash
-claude plugins install claude-roaster
+/plugin marketplace add https://github.com/muspelheim/claude-roaster
+/plugin install claude-roaster
 ```
 
 ## Usage

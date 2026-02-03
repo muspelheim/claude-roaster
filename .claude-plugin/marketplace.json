@@ -3,8 +3,8 @@
   "name": "claude-roaster",
   "description": "Brutal UI/UX roasting agent with multi-perspective analysis",
   "owner": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "Yauheni Padniuk",
+    "email": "yauheni@gmail.com"
   },
   "plugins": [
     {
@@ -12,8 +12,8 @@
       "description": "Brutal UI/UX roasting agent - multi-perspective design critique with no mercy. Supports Xcode MCP, Playwright MCP, and manual screenshot upload.",
       "version": "1.0.0",
       "author": {
-        "name": "Your Name",
-        "email": "your.email@example.com"
+        "name": "Yauheni Padniuk",
+        "email": "yauheni@gmail.com"
       },
       "source": "./",
       "category": "productivity",
