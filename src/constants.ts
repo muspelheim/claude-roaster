@@ -18,7 +18,7 @@ import type {
 // =============================================================================
 
 export const PLUGIN_NAME = 'claude-roaster';
-export const VERSION = '1.3.0';
+export const VERSION = '1.4.0';
 
 export const PLUGIN_METADATA: PluginMetadata = {
   name: PLUGIN_NAME,
