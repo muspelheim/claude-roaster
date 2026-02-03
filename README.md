@@ -69,32 +69,15 @@ Ever wanted Gordon Ramsay to review your UI? This is it. The Roaster agent tears
 
 ### What Happens
 
-```
-🔥 ROAST SESSION STARTED
-├─ Mode: screen
-├─ Target: login
-├─ Iterations: 3
-└─ Focus: balanced
+1. **Capture** - Screenshot taken via detected MCP
+2. **Analyze** - Agents run in parallel (see progress with `ctrl+o`)
+3. **Report** - Results synthesized and saved to markdown
+4. **Fix** - Choose how to handle issues (asked after results shown)
+5. **Iterate** - Repeat for configured iterations
 
-📸 Capturing screenshot...
-└─ Using: Playwright MCP ✓
+**Agent progress** is shown in Claude Code's native UI - press `ctrl+o` to expand the task tree and see each agent's status.
 
-🔥 Roasting: login (1/3)
-├─ 🎨 Designer: ✓ 3 issues
-├─ 💻 Developer: ✓ 2 issues
-├─ 👤 User: ✓ 4 issues
-├─ ♿ A11y: ✓ 5 issues (2 critical!)
-└─ 📈 Marketing: ✓ 2 issues
-
-Found 16 issues:
-├─ 🔴 Critical: 2
-├─ 🟠 Major: 6
-└─ 🟡 Minor: 8
-
-📄 Report: reports/roast/roast_login_1.md
-```
-
-**Smart defaults:** Starts immediately without asking questions. Fix preferences asked only after showing results.
+**Smart defaults:** Starts immediately. Fix preferences asked only after results.
 
 ## How It Works
 
@@ -294,6 +277,25 @@ All options use unified `--option=value` syntax:
 | `--focus` | a11y, conversion, usability, visual, implementation | balanced | Prioritize perspective |
 | `--fix` | auto, report, ask | ask | How to handle fixes |
 | `--output` | path | reports/roast/ | Output directory |
+| `--agents` | fast, core, full | core | Agent preset (speed vs thoroughness) |
+| `--skip` | agent names | - | Skip specific agents (e.g., a11y,flow) |
+
+### Agent Presets (Speed)
+
+| Preset | Agents | Time | Use Case |
+|--------|--------|------|----------|
+| `fast` | Designer, User | ~30s | Quick feedback |
+| `core` | Designer, Developer, User, Marketing | ~1min | Balanced (default) |
+| `full` | All 8 agents | ~3min | Thorough audit |
+
+```bash
+/roast screen login --agents=fast     # Fastest: 2 agents
+/roast screen login --agents=core     # Default: 4 agents
+/roast screen login --agents=full     # All 8 agents
+/roast screen login --skip=a11y       # Core minus slow a11y agent
+```
+
+**Slow agents** (in `full` only): a11y, performance, copy, flow - these do deeper analysis and take longer.
 
 ### Focus Areas
 

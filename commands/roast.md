@@ -19,12 +19,25 @@ description: Launch brutal UI/UX roasting session with multi-perspective analysi
 --focus=<area>                      # Prioritize: a11y|conversion|usability|visual|implementation
 --output=<path>                     # Custom output directory (default: reports/roast/)
 --fix=<mode>                        # Fix mode: auto|report|ask (default: ask)
+--agents=<preset|list>              # Which agents: fast|core|full|custom (default: core)
+--skip=<agents>                     # Skip specific agents: a11y,performance,flow
+
+# Agent presets
+--agents=fast                       # Designer + User only (fastest, ~30s)
+--agents=core                       # Designer + Developer + User + Marketing (default, ~1min)
+--agents=full                       # All 8 agents including a11y, performance, copy, flow (~3min)
+
+# Skip specific slow agents
+--skip=a11y                         # Skip accessibility (slowest)
+--skip=a11y,performance,flow        # Skip multiple agents
 
 # Examples
-/roast screen login
-/roast screen settings --focus=a11y
+/roast screen login                             # Core agents (fast)
+/roast screen login --agents=fast               # Fastest: 2 agents
+/roast screen login --agents=full               # All 8 agents (thorough)
+/roast screen login --skip=a11y                 # Core minus a11y
+/roast screen settings --focus=a11y --agents=full  # Full with a11y focus
 /roast flow checkout --iterations=5
-/roast flow onboarding --fix=auto
 /roast audit --output=./audit-results
 ```
 
@@ -66,35 +79,46 @@ Detect and use screenshot method automatically:
 2. `mcp__playwright__browser_take_screenshot` → Web browser
 3. Manual upload request → Fallback
 
-### Phase 3: Parallel Analysis (Show Progress)
+### Phase 3: Parallel Analysis
+
+**Agent Presets:**
+
+| Preset | Agents | Speed | Use Case |
+|--------|--------|-------|----------|
+| `fast` | Designer, User | ~30s | Quick feedback |
+| `core` | Designer, Developer, User, Marketing | ~1min | Default, balanced |
+| `full` | All 8 agents | ~3min | Thorough audit |
+
+**Agents by preset:**
 
 ```
-🔥 Roasting: [target] (iteration [n]/[total])
-├─ 📸 Screenshot captured ✓
-├─ 🎨 Designer: analyzing...
-├─ 💻 Developer: analyzing...
-├─ 👤 User: analyzing...
-├─ ♿ A11y: analyzing...
-└─ 📈 Marketing: analyzing...
+fast: roaster-designer, roaster-user
+core: roaster-designer, roaster-developer, roaster-user, roaster-marketing
+full: + roaster-a11y, roaster-performance, roaster-copy, roaster-flow
 ```
 
-Launch ALL perspective agents in parallel:
-```
+**Launch agents based on preset:**
+
+```typescript
+// --agents=fast (2 agents)
+Task(subagent_type="claude-roaster:roaster-designer", ...)
+Task(subagent_type="claude-roaster:roaster-user", ...)
+
+// --agents=core (4 agents, default)
 Task(subagent_type="claude-roaster:roaster-designer", ...)
 Task(subagent_type="claude-roaster:roaster-developer", ...)
 Task(subagent_type="claude-roaster:roaster-user", ...)
-Task(subagent_type="claude-roaster:roaster-a11y", ...)
 Task(subagent_type="claude-roaster:roaster-marketing", ...)
+
+// --agents=full (8 agents)
+// All above plus:
+Task(subagent_type="claude-roaster:roaster-a11y", ...)
+Task(subagent_type="claude-roaster:roaster-performance", ...)
+Task(subagent_type="claude-roaster:roaster-copy", ...)
+Task(subagent_type="claude-roaster:roaster-flow", ...)
 ```
 
-Update progress as each completes:
-```
-├─ 🎨 Designer: ✓ Found 3 issues
-├─ 💻 Developer: ✓ Found 2 issues
-├─ 👤 User: ✓ Found 4 issues
-├─ ♿ A11y: ✓ Found 5 issues (2 critical)
-└─ 📈 Marketing: ✓ Found 2 issues
-```
+**Note:** Progress indicators are shown by Claude Code's native agent UI. The tree view (`ctrl+o` to expand) shows real-time status of each agent.
 
 ### Phase 4: Report Generation
 
